@@ -52,6 +52,7 @@ func (i *imageRegistryService) CreateImageRegistry(ctx context.Context, projectI
 		SecretNamespace:   imageRegistryInfo.SecretNamespace,
 		EnableRegistry:    imageRegistryInfo.EnableRegistry,
 		IsDefault:         imageRegistryInfo.IsDefault,
+		ImageTag:          imageRegistryInfo.ImageTag,
 		Audit: mongodb.Audit{
 			CreatedAt: currentTime,
 			UpdatedAt: currentTime,
@@ -75,6 +76,7 @@ func (i *imageRegistryService) CreateImageRegistry(ctx context.Context, projectI
 			SecretNamespace:   imageRegistryInfo.SecretNamespace,
 			EnableRegistry:    imageRegistryInfo.EnableRegistry,
 			IsDefault:         &imageRegistry.IsDefault,
+			ImageTag:          imageRegistryInfo.ImageTag,
 		},
 
 		CreatedAt: &currTimeStr,
@@ -100,6 +102,7 @@ func (i *imageRegistryService) UpdateImageRegistry(ctx context.Context, imageReg
 		{"secret_namespace", imageRegistryInfo.SecretNamespace},
 		{"enable_registry", imageRegistryInfo.EnableRegistry},
 		{"is_default", imageRegistryInfo.IsDefault},
+		{"image_tag", imageRegistryInfo.ImageTag},
 		{"updated_at", currentTime},
 	}}}
 
@@ -119,6 +122,7 @@ func (i *imageRegistryService) UpdateImageRegistry(ctx context.Context, imageReg
 			SecretNamespace:   imageRegistryInfo.SecretNamespace,
 			EnableRegistry:    imageRegistryInfo.EnableRegistry,
 			IsDefault:         &imageRegistryInfo.IsDefault,
+			ImageTag:          imageRegistryInfo.ImageTag,
 		},
 		UpdatedAt: &currTimeStr,
 		IsRemoved: &bl,
@@ -155,6 +159,7 @@ func (i *imageRegistryService) GetImageRegistry(ctx context.Context, projectID s
 			SecretName:        imageRegistry.SecretName,
 			SecretNamespace:   imageRegistry.SecretNamespace,
 			EnableRegistry:    imageRegistry.EnableRegistry,
+			ImageTag:          imageRegistry.ImageTag,
 		},
 		ImageRegistryID: imageRegistry.ImageRegistryID,
 		ProjectID:       projectID,
@@ -185,6 +190,7 @@ func (i *imageRegistryService) ListImageRegistries(ctx context.Context, projectI
 				SecretName:        ir.SecretName,
 				SecretNamespace:   ir.SecretNamespace,
 				EnableRegistry:    ir.EnableRegistry,
+				ImageTag:          ir.ImageTag,
 			},
 			ImageRegistryID: ir.ImageRegistryID,
 			ProjectID:       projectID,

@@ -32,6 +32,7 @@ export function updateImageRegistry(
             imageRegistryName
             imageRegistryType
             isDefault
+            imageTag
           }
         }
       }

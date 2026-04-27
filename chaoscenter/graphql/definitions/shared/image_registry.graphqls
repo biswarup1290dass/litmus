@@ -30,6 +30,10 @@ type ImageRegistry {
   Bool value indicating if image registry is enabled or not
   """
   enableRegistry: Boolean
+  """
+  Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+  """
+  imageTag: String
 }
 
 """
@@ -64,6 +68,10 @@ input ImageRegistryInput {
   Bool value indicating if image registry is enabled or not
   """
   enableRegistry: Boolean
+  """
+  Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+  """
+  imageTag: String
 }
 
 """

@@ -27,6 +27,7 @@ export function getImageRegistry({
             imageRegistryName
             imageRepoName
             imageRegistryType
+            imageTag
           }
           imageRegistryID
         }

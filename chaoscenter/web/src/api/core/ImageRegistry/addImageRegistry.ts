@@ -14,6 +14,7 @@ export function addImageRegistry(
             imageRegistryName
             imageRegistryType
             isDefault
+            imageTag
           }
         }
       }

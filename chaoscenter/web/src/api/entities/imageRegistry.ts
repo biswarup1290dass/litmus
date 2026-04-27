@@ -6,6 +6,7 @@ export interface ImageRegistryInfo {
   secretName: string;
   secretNamespace: string;
   enableRegistry: boolean;
+  imageTag?: string;
 }
 
 export enum ImageRegistryType {

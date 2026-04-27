@@ -13,4 +13,5 @@ type ImageRegistry struct {
 	SecretNamespace   *string `bson:"secret_namespace"`
 	IsDefault         bool    `bson:"is_default"`
 	EnableRegistry    *bool   `bson:"enable_registry"`
+	ImageTag          *string `bson:"image_tag,omitempty"`
 }
