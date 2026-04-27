@@ -37,8 +37,10 @@ export interface ServiceIdentifiers {
 }
 
 export interface ImageRegistry {
+  name: string;
   repo: string;
   secret: string;
+  tag?: string;
 }
 
 export interface ExperimentMetadata extends CommonDBAttributes {

@@ -36,20 +36,6 @@
     "url": "https://github.com/litmuschaos/litmus/issues"
   },
   "homepage": "https://github.com/litmuschaos/litmus#readme",
-  "lint-staged": {
-    "src/**/*.+(ts|tsx)": [
-      "yarn lint:staged",
-      "yarn typecheck:staged",
-      "yarn format"
-    ],
-    "src/**/*.+(json)": [
-      "yarn format"
-    ],
-    "strings.*.yaml": [
-      "yarn strings:sort",
-      "yarn strings:check"
-    ]
-  },
   "jestSonar": {
     "reportPath": "coverage",
     "reportFile": "test-reporter.xml"

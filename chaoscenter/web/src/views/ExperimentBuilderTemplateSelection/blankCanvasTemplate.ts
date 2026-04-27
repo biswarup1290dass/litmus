@@ -24,6 +24,7 @@ function kubernetesBlankCanvasTemplate(
   chaosInfrastructureNamespace?: string,
   _serviceAccount?: string,
   imageRegistry: ImageRegistry = {
+    name: 'docker.io',
     repo: 'litmuschaos',
     secret: ''
   }
@@ -67,7 +68,7 @@ function kubernetesBlankCanvasTemplate(
           },
           container: {
             name: '',
-            image: `${imageRegistry.repo}/k8s:2.11.0`,
+            image: `${imageRegistry.name}/${imageRegistry.repo}/k8s:${imageRegistry.tag ?? '2.11.0'}`,
             command: ['sh', '-c'],
             args: ['kubectl apply -f /tmp/ -n {{workflow.parameters.adminModeNamespace}} && sleep 30']
           }
@@ -76,7 +77,7 @@ function kubernetesBlankCanvasTemplate(
           name: 'cleanup-chaos-resources',
           container: {
             name: '',
-            image: `${imageRegistry.repo}/k8s:2.11.0`,
+            image: `${imageRegistry.name}/${imageRegistry.repo}/k8s:${imageRegistry.tag ?? '2.11.0'}`,
             command: ['sh', '-c'],
             args: [
               'kubectl delete chaosengine -l workflow_run_id={{workflow.uid}} -n {{workflow.parameters.adminModeNamespace}}'

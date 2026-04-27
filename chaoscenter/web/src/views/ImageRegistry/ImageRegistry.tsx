@@ -288,6 +288,15 @@ export default function ImageRegistryView({
                                     />
                                   </Layout.Vertical>
                                 )}
+                                <FormInput.Text
+                                  name="imageTag"
+                                  label={
+                                    <Text font={{ variation: FontVariation.FORM_LABEL }} margin={{ top: 'small' }}>
+                                      {getString('imageTag')}
+                                    </Text>
+                                  }
+                                  placeholder={getString('imageTagPlaceholder')}
+                                />
                               </Layout.Vertical>
                             )}
                           </Layout.Vertical>

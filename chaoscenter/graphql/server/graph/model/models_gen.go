@@ -885,6 +885,8 @@ type ImageRegistry struct {
 	SecretNamespace *string `json:"secretNamespace,omitempty"`
 	// Bool value indicating if image registry is enabled or not
 	EnableRegistry *bool `json:"enableRegistry,omitempty"`
+	// Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+	ImageTag *string `json:"imageTag,omitempty"`
 }
 
 // Defines input data for querying the details of an image registry
@@ -903,6 +905,8 @@ type ImageRegistryInput struct {
 	SecretNamespace *string `json:"secretNamespace,omitempty"`
 	// Bool value indicating if image registry is enabled or not
 	EnableRegistry *bool `json:"enableRegistry,omitempty"`
+	// Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+	ImageTag *string `json:"imageTag,omitempty"`
 }
 
 // Defines response data for image registry

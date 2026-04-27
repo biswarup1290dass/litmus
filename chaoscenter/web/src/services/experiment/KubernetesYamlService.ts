@@ -66,7 +66,8 @@ export class KubernetesYamlService extends ExperimentYamlService {
       if (faultCR?.spec?.definition) {
         faultCR.spec.definition.image = updateContainerImage(
           faultCR?.spec?.definition?.image,
-          experiment.imageRegistry
+          experiment.imageRegistry,
+          true // go-runner: preserve ChaosHub tag
         );
       }
       // Add faults in install-chaos-faults template
@@ -201,7 +202,8 @@ export class KubernetesYamlService extends ExperimentYamlService {
               if (faultCR?.spec?.definition) {
                 faultCR.spec.definition.image = updateContainerImage(
                   faultCR?.spec?.definition?.image,
-                  experiment.imageRegistry
+                  experiment.imageRegistry,
+                  true // go-runner: preserve ChaosHub tag
                 );
               }
 
@@ -974,29 +976,29 @@ export class KubernetesYamlService extends ExperimentYamlService {
   }
 
   updateFaultTunablesInFaultData(
-  faultData: FaultData | undefined,
-  faultTunables: FaultTunables | undefined
-): FaultData | undefined {
-  const chaosEngine = faultData?.engineCR;
-  if (!chaosEngine || !faultTunables) return faultData;
+    faultData: FaultData | undefined,
+    faultTunables: FaultTunables | undefined
+  ): FaultData | undefined {
+    const chaosEngine = faultData?.engineCR;
+    if (!chaosEngine || !faultTunables) return faultData;
 
-  const envs: EnvVar[] = Object.entries(faultTunables).map(([envName, faultTunable]) => {
-    return {
-      name: envName,
-      value: faultTunable.value?.toString(),
-      valueFrom: faultTunable.valueFrom
-    };
-  });
+    const envs: EnvVar[] = Object.entries(faultTunables).map(([envName, faultTunable]) => {
+      return {
+        name: envName,
+        value: faultTunable.value?.toString(),
+        valueFrom: faultTunable.valueFrom
+      };
+    });
 
-  if (chaosEngine.spec?.experiments?.[0].spec.components) {
-    chaosEngine.spec.experiments[0].spec.components = {
-      ...chaosEngine.spec.experiments[0].spec.components,
-      env: envs
-    };
+    if (chaosEngine.spec?.experiments?.[0].spec.components) {
+      chaosEngine.spec.experiments[0].spec.components = {
+        ...chaosEngine.spec.experiments[0].spec.components,
+        env: envs
+      };
+    }
+
+    return faultData;
   }
-
-  return faultData;
-}
 
   async preProcessChaosEngineAndExperimentManifest(
     key: ChaosObjectStoresPrimaryKeys['experiments'],
@@ -1175,16 +1177,14 @@ export class KubernetesYamlService extends ExperimentYamlService {
   }
 }
 
-function updateContainerImage(image: string, registry: ImageRegistry | undefined): string {
-  // Extract image name + tag from original image
-  // Example: docker.io/litmuschaos/litmus-checker:2.11.0
+function updateContainerImage(image: string, registry: ImageRegistry | undefined, preserveTag = false): string {
   const parts = image.split('/');
-  const lastPart = parts[parts.length - 1]; // litmus-checker:2.11.0
+  const lastPart = parts[parts.length - 1]; // e.g. litmus-checker:2.11.0
+  const [imageName, originalTag] = lastPart.split(':');
+  // preserveTag=true for go-runner: keep whatever tag the ChaosHub / user last saved
+  const tag = !preserveTag && registry?.tag ? registry.tag : originalTag;
 
-  // Build new image
-  const newImage = `${registry?.repo}/${lastPart}`;
-
-  return newImage;
+  return `${registry?.name}/${registry?.repo}/${imageName}:${tag}`;
 }
 
 const kubernetesYamlService = new KubernetesYamlService();

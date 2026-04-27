@@ -316,6 +316,7 @@ type ComplexityRoot struct {
 		ImageRegistryName func(childComplexity int) int
 		ImageRegistryType func(childComplexity int) int
 		ImageRepoName     func(childComplexity int) int
+		ImageTag          func(childComplexity int) int
 		IsDefault         func(childComplexity int) int
 		SecretName        func(childComplexity int) int
 		SecretNamespace   func(childComplexity int) int
@@ -2137,6 +2138,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ImageRegistry.ImageRepoName(childComplexity), true
+
+	case "ImageRegistry.imageTag":
+		if e.complexity.ImageRegistry.ImageTag == nil {
+			break
+		}
+
+		return e.complexity.ImageRegistry.ImageTag(childComplexity), true
 
 	case "ImageRegistry.isDefault":
 		if e.complexity.ImageRegistry.IsDefault == nil {
@@ -7105,6 +7113,10 @@ type ImageRegistry {
   Bool value indicating if image registry is enabled or not
   """
   enableRegistry: Boolean
+  """
+  Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+  """
+  imageTag: String
 }
 
 """
@@ -7139,6 +7151,10 @@ input ImageRegistryInput {
   Bool value indicating if image registry is enabled or not
   """
   enableRegistry: Boolean
+  """
+  Custom tag to use for all Litmus helper images (e.g. 3.27.0); falls back to image defaults if not set
+  """
+  imageTag: String
 }
 
 """
@@ -18602,6 +18618,47 @@ func (ec *executionContext) fieldContext_ImageRegistry_enableRegistry(_ context.
 	return fc, nil
 }
 
+func (ec *executionContext) _ImageRegistry_imageTag(ctx context.Context, field graphql.CollectedField, obj *model.ImageRegistry) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageRegistry_imageTag(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ImageTag, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageRegistry_imageTag(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageRegistry",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ImageRegistryResponse_isDefault(ctx context.Context, field graphql.CollectedField, obj *model.ImageRegistryResponse) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ImageRegistryResponse_isDefault(ctx, field)
 	if err != nil {
@@ -18696,6 +18753,8 @@ func (ec *executionContext) fieldContext_ImageRegistryResponse_imageRegistryInfo
 				return ec.fieldContext_ImageRegistry_secretNamespace(ctx, field)
 			case "enableRegistry":
 				return ec.fieldContext_ImageRegistry_enableRegistry(ctx, field)
+			case "imageTag":
+				return ec.fieldContext_ImageRegistry_imageTag(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ImageRegistry", field.Name)
 		},
@@ -36762,7 +36821,7 @@ func (ec *executionContext) unmarshalInputImageRegistryInput(ctx context.Context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"isDefault", "imageRegistryName", "imageRepoName", "imageRegistryType", "secretName", "secretNamespace", "enableRegistry"}
+	fieldsInOrder := [...]string{"isDefault", "imageRegistryName", "imageRepoName", "imageRegistryType", "secretName", "secretNamespace", "enableRegistry", "imageTag"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -36818,6 +36877,13 @@ func (ec *executionContext) unmarshalInputImageRegistryInput(ctx context.Context
 				return it, err
 			}
 			it.EnableRegistry = data
+		case "imageTag":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("imageTag"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ImageTag = data
 		}
 	}
 
@@ -40563,6 +40629,8 @@ func (ec *executionContext) _ImageRegistry(ctx context.Context, sel ast.Selectio
 			out.Values[i] = ec._ImageRegistry_secretNamespace(ctx, field, obj)
 		case "enableRegistry":
 			out.Values[i] = ec._ImageRegistry_enableRegistry(ctx, field, obj)
+		case "imageTag":
+			out.Values[i] = ec._ImageRegistry_imageTag(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
